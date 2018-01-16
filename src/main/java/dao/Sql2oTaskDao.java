@@ -16,7 +16,7 @@ public class Sql2oTaskDao implements TaskDao { //implements interface
 
     @Override
     public void add(Task task) {
-        String sql = "INSERT INTO tasks(description) VALUES (:description)"; //raw sql
+        String sql = "INSERT INTO tasks(description, categoryId) VALUES (:description, :categoryId)"; //raw sql
         try (Connection con = sql2o.open()) {//try to open connection
             int id = (int) con.createQuery(sql) //make a new variable
                 .bind(task) //map argument onto query so info can be used
@@ -42,6 +42,42 @@ public class Sql2oTaskDao implements TaskDao { //implements interface
             return con.createQuery("SELECT * FROM tasks WHERE id = :id")
                     .addParameter("id", id) //key/value pair, key must match above
                     .executeAndFetchFirst(Task.class); //fetch an individual item
+        }
+    }
+
+    @Override
+    public void update(int id, String newDescription, int categoryId) {
+        String sql = "UPDATE tasks SET description = :description WHERE id=:id";
+        try(Connection con = sql2o.open()) {
+            con.createQuery(sql)
+                    .addParameter("description", newDescription)
+                    .addParameter("id", id)
+                    .executeUpdate();
+        } catch (Sql2oException ex) {
+            System.out.println(ex);
+        }
+    }
+
+    @Override
+    public void deleteById(int id) {
+        String sql = "DELETE from tasks WHERE id=:id";
+        try (Connection con = sql2o.open()) {
+            con.createQuery(sql)
+                    .addParameter("id", id)
+                    .executeUpdate();
+        } catch (Sql2oException ex) {
+            System.out.println(ex);
+        }
+    }
+
+    @Override
+    public void clearAllTasks() {
+        String sql = "DELETE from tasks";
+        try (Connection con = sql2o.open()){
+            con.createQuery(sql)
+                    .executeUpdate();
+        } catch (Sql2oException ex) {
+            System.out.println(ex);
         }
     }
 }

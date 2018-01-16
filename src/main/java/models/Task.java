@@ -9,11 +9,13 @@ public class Task {
     private boolean completed;
     private LocalDateTime createdAt;
     private int id;
+    private int categoryId;
 
-    public Task(String description){
+    public Task(String description, int categoryId){
         this.description = description;
         this.completed = false;
         this.createdAt = LocalDateTime.now();
+        this.categoryId = categoryId;
     }
 
     public void setDescription(String description) {
@@ -22,6 +24,10 @@ public class Task {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     @Override
@@ -59,5 +65,9 @@ public class Task {
 
     public int getId() {
         return this.id;
+    }
+
+    public int getCategoryId() {
+        return this.categoryId;
     }
 }
